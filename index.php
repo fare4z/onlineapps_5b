@@ -1,19 +1,39 @@
 <?php  
 include_once 'include/constant.php';
 include_once 'include/header.php';
-
+session_start();
 if (isset($_POST['Submit'])) {
 
 $username = $_POST['username'];
 $password = $_POST['password'];
 
 if ($username=='fareez' && $password=='12345') {
-    $msg = 'Login Success';
+    $msg = " <div class='alert alert-primary' role='alert'>Login Success</div>";
+
+// Use Cookie
+    //setcookie("username", $username, time()+30*24*60*60);
+
+// Use Session
+    
+
+    // Storing session data
+$_SESSION["username"] = $username;
+$_SESSION["full_name"] = "Muhammad Fareez bin Borhanudin";
+
+
+ header( 'Location: success.php' );
 } else {
-    $msg = "Login Failed";
+    $msg = "<div class='alert alert-danger' role='alert'>Login Failed</div> ";
 }
 
 }
+
+if (isset($_COOKIE['username'])) {
+    header( 'Location: success.php' );
+} elseif (isset($_SESSION['username'])) {
+    header( 'Location: success.php' );
+} 
+
 ?>
             <header class="bg-dark py-5">
                 <div class="container px-5">
@@ -44,9 +64,14 @@ Applications must be completed online as the University will not be accepting ma
 <div class="card" style="background-color: #efefef;">
   <h5 class="card-header">Login</h5>
   <div class="card-body">
+    <?php if (isset($msg)) { ?>
+  <?php echo "$msg"; ?>
+<?php 
+}
+ ?>
    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" name="process">
         Username
-        <input type="text" class="form-control" name="username" id="username" placeholder="e.g. john" required="">
+        <input type="text" class="form-control" name="username" id="username" placeholder="e.g. john" required="" autofocus>
         Password
         <input type="password" autocomplete="off" class="form-control" name="password" id="password" placeholder="Password" required="">
           <div class="form-group">
@@ -57,12 +82,7 @@ Applications must be completed online as the University will not be accepting ma
               <br>
            
         </form>
-<?php if (isset($msg)) {
-    echo "$msg";
-}
 
-
- ?>
       <p></p>
 
   </div>
